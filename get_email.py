@@ -27,11 +27,13 @@ def get_email(username):
                         print('SUCCESS !!!')
                         new_response = requests.get('https://github.com{}.patch'.format(commit_link[0]['href']))
                         final_data = new_response.text
-                        emails = re.findall(r'[\w\.-]+@[\w\.-]+', final_data)
+                        emails = re.findall(r'[\w\.-]+@\w+\.[a-z]{2,3}', final_data)
                         for email in emails:
                             return email
                 except IndexError:
                     print('Nothing found here, moving to next repo')
+            else:
+                print('* NO REPO information *')
 
 
 
