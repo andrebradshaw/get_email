@@ -8,7 +8,7 @@ var url = window.location.href; //get the current URL on screen
 if(/github/.test(url) === true){ //if it is a github url
 
   var url = /^.+?github\.com\/.+?(?:\/|$)/.exec(window.location.href).toString(); //extract the user path
-  xwindow.open(yourAppsScriptWebAppLink+'?out='+url);
+  window.open(yourAppsScriptWebAppLink+'?out='+url);
 
 }else{
 	alert('you do not appear to be on a github profile.\ntry again by navigating to the profile for which you wish to find an email');
