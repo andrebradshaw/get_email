@@ -7,9 +7,8 @@ function grouped(e, n){ //this function takes two parameters, a regular expressi
 }
 
 function soFetch(path){ //this function takes a URL and fetches the HTML. 
-  var url = path;
   var opt = {"method": "GET"};
-  var resp = UrlFetchApp.fetch(url, opt);
+  var resp = UrlFetchApp.fetch(path, opt);
   return resp.toString().replace(/\n|\r/g, ''); //we then convert that HTML object to a string and flatten it to a one-liner by removing newlines and carriage returns
 }
 
