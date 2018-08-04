@@ -1,3 +1,9 @@
+/*/ 
+
+INSTALL GUIDE: https://youtu.be/_k7VIKJ9CNA
+
+/*/
+
 function grouped(e, n){ //this function takes two parameters, a regular expression with a group (must have a group or will fail), and a number to assign which group number to match
   if(e != null){ //if the regex gets a match
     return e[n].toString(); //return the requested group match as a string
