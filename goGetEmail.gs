@@ -55,6 +55,4 @@ function doGet(a){ //this function takes JSONP data from a http request. the JSO
 
 }
 
-}
-
 
