@@ -117,22 +117,21 @@ async function showEmail() {
   textbox_1.select();
   document.execCommand("copy");
 
-if(email){
-  var linkBtn = document.createElement("button");
-  cDiv.appendChild(linkBtn);
-  linkBtn.setAttribute("id", "btn_link");
-  linkBtn.innerText = "Search LinkedIn";
-  linkBtn.style.position = "absolute";
-  linkBtn.style.background = "#0b868e";
-  linkBtn.style.color = "white";
-  linkBtn.style.display = "inline-block";
-  linkBtn.style.borderRadius = ".2em";
-  linkBtn.style.border = "1px solid white";
-  linkBtn.addEventListener("click", checkLinkedIn);
-}
-  function checkLinkedIn(){
   if(/@/.test(email) && /users.noreply.github.com/.test(email) === false){
-		window.open('https://www.linkedin.com/sales/gmail/profile/proxy/'+email);
+    var linkBtn = document.createElement("button");
+    cDiv.appendChild(linkBtn);
+    linkBtn.setAttribute("id", "btn_link");
+    linkBtn.innerText = "Search LinkedIn";
+    linkBtn.style.position = "absolute";
+    linkBtn.style.background = "#0b868e";
+    linkBtn.style.color = "white";
+    linkBtn.style.display = "inline-block";
+    linkBtn.style.borderRadius = ".2em";
+    linkBtn.style.border = "1px solid white";
+    linkBtn.addEventListener("click", checkLinkedIn);
+
+    function checkLinkedIn(){
+	window.open('https://www.linkedin.com/sales/gmail/profile/proxy/'+email);    
     }
   }
   function close_s() {
@@ -140,6 +139,4 @@ if(email){
   }
 
 }
-
-
 showEmail()
