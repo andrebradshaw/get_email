@@ -112,14 +112,30 @@ async function showEmail() {
   textbox_1.style.padding = "6px";
   textbox_1.style.border = "1px solid #293242";
   textbox_1.style.color = "#2b3442";
+  textbox_1.style.borderRadius = ".2em";
   textbox_1.value = email;
   textbox_1.select();
   document.execCommand("copy");
 
+  var linkBtn = document.createElement("button");
+  cDiv.appendChild(linkBtn);
+  linkBtn.setAttribute("id", "btn_link");
+  linkBtn.innerText = "Search LinkedIn";
+  linkBtn.style.position = "absolute";
+  linkBtn.style.background = "#0b868e";
+  linkBtn.style.color = "white";
+  linkBtn.style.display = "inline-block";
+  linkBtn.style.borderRadius = ".2em";
+  linkBtn.style.border = "1px solid white";
+  linkBtn.addEventListener("click", checkLinkedIn);
+
+  function checkLinkedIn(){
+	if(/@/.test(email)){
+		window.open('https://www.linkedin.com/sales/gmail/profile/proxy/'+email);
+    }
+  }
   function close_s() {
     document.body.removeChild(document.getElementById("pop_container"));
   }
-
 }
-
 showEmail()
