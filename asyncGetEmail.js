@@ -2,6 +2,22 @@ var reg = (elm, n) => elm != null ? elm[n] : '';
 var cn = (ob, nm) => ob.getElementsByClassName(nm);
 var tn = (ob, nm) => ob.getElementsByTagName(nm);
 var nm = (ob, nm) => ob.getElementsByName(nm);
+function loadingElm() {
+  var loaD = document.createElement("div");
+  loaD.setAttribute("id", "loader-elm");
+  document.body.appendChild(loaD);
+  loaD.style.top = '6%';
+  loaD.style.left = '50%';
+  loaD.style.position = "fixed";
+  loaD.style.zIndex = "10001";
+  loaD.innerHTML = '<svg version="1.1" id="Layer_1" x="0px" y="0px"     width="200px" height="200px" viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;">    <rect x="0" y="10" width="4" height="0" fill="#333" opacity="0.2">      <animate attributeName="opacity" values="0.2; 1; .2" begin="0s" dur="555ms" repeatCount="indefinite" />      <animate attributeName="height" values="10; 20; 10" begin="0s" dur="555ms" repeatCount="indefinite" />      <animate attributeName="y"values="10; 5; 10" begin="0s" dur="555ms" repeatCount="indefinite" />    </rect>    <rect x="8" y="10" width="4" height="10" fill="#333"  opacity="0.2">      <animate attributeName="opacity" values="0.2; 1; .2" begin="0.15s" dur="555ms" repeatCount="indefinite" />      <animate attributeName="height" values="10; 20; 10" begin="0.15s" dur="555ms" repeatCount="indefinite" />      <animate attributeName="y" values="10; 5; 10" begin="0.15s" dur="555ms" repeatCount="indefinite" />    </rect>    <rect x="16" y="10" width="4" height="10" fill="#333"  opacity="0.2">      <animate attributeName="opacity" values="0.2; 1; .2" begin="0.3s" dur="555ms" repeatCount="indefinite" />      <animate attributeName="height" values="10; 20; 10" begin="0.3s" dur="555ms" repeatCount="indefinite" />      <animate attributeName="y" values="10; 5; 10" begin="0.3s" dur="555ms" repeatCount="indefinite" />    </rect>  </svg>';
+}
+
+loadingElm();
+
+function killLoader() {
+  document.body.removeChild(document.getElementById("loader-elm"));
+}
 
 async function getMainPage(page) {
   var res = await fetch(page, {
@@ -50,7 +66,9 @@ async function getPatches(link) {
 async function showEmail() {
   var url = reg(/^.+?github\.com\/.+?(?:\/|$)/.exec(window.location.href), 0);
   var email = await getMainPage(url);
-
+  killLoader();
+  if(document.getElementById("pop_container")) close_s();
+  
   var cDiv = document.createElement("div");
   cDiv.setAttribute("id", "pop_container");
   document.body.appendChild(cDiv);
