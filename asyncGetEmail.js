@@ -108,7 +108,7 @@ async function showEmail() {
     cDiv.appendChild(linkBtn);
     linkBtn.setAttribute("id", "btn_link");
     linkBtn.innerText = "Search LinkedIn";
-	linkBtn.style.width = "100%"
+	linkBtn.style.width = "100%";
 	linkBtn.style.transform = "translate(0%, -102%)";
     linkBtn.style.position = "absolute";
     linkBtn.style.background = "#0b868e";
