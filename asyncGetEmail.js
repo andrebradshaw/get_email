@@ -103,11 +103,41 @@ async function showEmail() {
   clsBtn.style.color = "Crimson";
   clsBtn.addEventListener("click", close_s);
 
+  if(/@/.test(email) && /users.noreply.github.com/.test(email) === false){
+    var linkBtn = document.createElement("button");
+    cDiv.appendChild(linkBtn);
+    linkBtn.setAttribute("id", "btn_link");
+    linkBtn.innerText = "Search LinkedIn";
+	linkBtn.style.width = "100%"
+	linkBtn.style.transform = "translate(0%, -102%)";
+    linkBtn.style.position = "absolute";
+    linkBtn.style.background = "#0b868e";
+    linkBtn.style.color = "white";
+    linkBtn.style.display = "inline-block";
+    linkBtn.style.borderRadius = ".2em";
+    linkBtn.style.border = "1px solid white";
+    linkBtn.addEventListener("click", checkLinkedIn);
+	linkBtn.addEventListener("mouseover", hoverin);
+	linkBtn.addEventListener("mouseout", hoverout);
+    function checkLinkedIn(){
+		window.open('https://www.linkedin.com/sales/gmail/profile/proxy/'+email);    
+    }
+	function hoverin(){
+		this.style.transform = "scale(1.05, 1.05) translate(0%, -102%)";
+		this.style.background = '#2896a0';
+		this.style.transition = 'all 193ms';
+	}
+	function hoverout(){
+		this.style.transform = "scale(1, 1) translate(0%, -102%)";
+		this.style.background = '#0b868e';
+		this.style.transition = 'all 193ms';
+	}
+  }
   var textbox_1 = document.createElement("textarea");
   textbox_1.setAttribute("id", "textbox_code");
   textbox_1.setAttribute("placeholder", "copy/paste skills list here");
   cDiv.appendChild(textbox_1);
-  textbox_1.style.width = "100%";
+  textbox_1.style.width = "102%";
   textbox_1.style.height = "100%";
   textbox_1.style.padding = "6px";
   textbox_1.style.border = "1px solid #293242";
@@ -117,23 +147,6 @@ async function showEmail() {
   textbox_1.select();
   document.execCommand("copy");
 
-  if(/@/.test(email) && /users.noreply.github.com/.test(email) === false){
-    var linkBtn = document.createElement("button");
-    cDiv.appendChild(linkBtn);
-    linkBtn.setAttribute("id", "btn_link");
-    linkBtn.innerText = "Search LinkedIn";
-    linkBtn.style.position = "absolute";
-    linkBtn.style.background = "#0b868e";
-    linkBtn.style.color = "white";
-    linkBtn.style.display = "inline-block";
-    linkBtn.style.borderRadius = ".2em";
-    linkBtn.style.border = "1px solid white";
-    linkBtn.addEventListener("click", checkLinkedIn);
-
-    function checkLinkedIn(){
-	window.open('https://www.linkedin.com/sales/gmail/profile/proxy/'+email);    
-    }
-  }
   function close_s() {
     document.body.removeChild(document.getElementById("pop_container"));
   }
