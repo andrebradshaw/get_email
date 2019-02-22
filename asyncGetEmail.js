@@ -1,7 +1,43 @@
-var reg = (elm, n) => elm != null ? elm[n] : '';
-var cn = (ob, nm) => ob.getElementsByClassName(nm);
-var tn = (ob, nm) => ob.getElementsByTagName(nm);
-var nm = (ob, nm) => ob.getElementsByName(nm);
+var credentialObject = {
+  "credentials": "include",
+  "headers": {
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+    "accept-language": "en-US,en;q=0.9",
+    "if-none-match": "W/\"3f81f7bbf6a2f4f4ab456135ffc7bb13\"",
+    "upgrade-insecure-requests": "1"
+  },
+  "referrerPolicy": "no-referrer-when-downgrade",
+  "body": null,
+  "method": "GET",
+  "mode": "cors"
+};
+
+async function getProfile(url) {
+  var res = await fetch(url + '?tab=repositories', credentialObject);
+  var text = await res.text();
+  var doc = new DOMParser().parseFromString(text, 'text/html');
+  var pinnedRepos = doc.getElementsByClassName('col-12 d-flex width-full py-4 border-bottom public source');
+  var targetRepos = Array.from(pinnedRepos).map(itm => itm.getElementsByTagName('a')[0].href + '/commit/master.patch');
+  return checkEmailPatch(targetRepos);
+}
+
+async function getPatches(link) {
+  var res = await fetch(link, credentialObject);
+  var html = await res.text();
+  var email = /[\w|\.]+@\S+\.[a-zA-Z]+/.exec(html)[0];
+  return email;
+}
+
+async function checkEmailPatch(repos){
+  for (i = 0; i < repos.length; i++) {
+    var email = await getPatches(repos[i]);
+    if (email != '') {
+	  console.log(email);
+      return email;
+    }
+  }
+}
+
 function loadingElm() {
   var loaD = document.createElement("div");
   loaD.setAttribute("id", "loader-elm");
@@ -19,56 +55,12 @@ function killLoader() {
   document.body.removeChild(document.getElementById("loader-elm"));
 }
 
-async function getMainPage(page) {
-  var res = await fetch(page, {
-    "credentials": "include",
-    "headers": {
-      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-      "accept-language": "en-US,en;q=0.9",
-      "if-none-match": "W/\"3f81f7bbf6a2f4f4ab456135ffc7bb13\"",
-      "upgrade-insecure-requests": "1"
-    },
-    "referrerPolicy": "no-referrer-when-downgrade",
-    "body": null,
-    "method": "GET",
-    "mode": "cors"
-  });
-  var html = await res.text();
-  var doc = new DOMParser().parseFromString(html, "text/html");
-  var topRepos = Array.from(cn(doc, "pinned-item-list-item p-3 mb-3 border border-gray-dark rounded-1 public source")).map(itm => tn(itm, 'a')[0].href + '/commit/master.patch');
-  for (i = 0; i < topRepos.length; i++) {
-    var email = await getPatches(topRepos[i]);
-    if (email != '') {
-      return email;
-    }
-  }
-
-}
-
-async function getPatches(link) {
-  var res = await fetch(link, {
-    "credentials": "include",
-    "headers": {
-      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-      "accept-language": "en-US,en;q=0.9",
-      "if-none-match": "W/\"3f81f7bbf6a2f4f4ab456135ffc7bb13\"",
-      "upgrade-insecure-requests": "1"
-    },
-    "referrerPolicy": "no-referrer-when-downgrade",
-    "body": null,
-    "method": "GET",
-    "mode": "cors"
-  });
-  var html = await res.text();
-  var email = reg(/[\w|\.]+@\S+\.[a-zA-Z]+/.exec(html), 0);
-  return email;
-}
 async function showEmail() {
-  var url = reg(/^.+?github\.com\/.+?(?:\/|$)/.exec(window.location.href), 0);
-  var email = await getMainPage(url);
+  var profile = /^.+?github\.com\/.+?(?=\/|\?|$)/.exec(window.location.href)[0];
+  var email = await getProfile(profile);
   killLoader();
-  if(document.getElementById("pop_container")) close_s();
-  
+  if (document.getElementById("pop_container")) close_s();
+
   var cDiv = document.createElement("div");
   cDiv.setAttribute("id", "pop_container");
   document.body.appendChild(cDiv);
@@ -103,13 +95,13 @@ async function showEmail() {
   clsBtn.style.color = "Crimson";
   clsBtn.addEventListener("click", close_s);
 
-  if(/@/.test(email) && /users.noreply.github.com/.test(email) === false){
+  if (/@/.test(email) && /users.noreply.github.com/.test(email) === false) {
     var linkBtn = document.createElement("button");
     cDiv.appendChild(linkBtn);
     linkBtn.setAttribute("id", "btn_link");
     linkBtn.innerText = "Search LinkedIn";
-	linkBtn.style.width = "100%";
-	linkBtn.style.transform = "translate(0%, -102%)";
+    linkBtn.style.width = "100%";
+    linkBtn.style.transform = "translate(0%, -102%)";
     linkBtn.style.position = "absolute";
     linkBtn.style.background = "#0b868e";
     linkBtn.style.color = "white";
@@ -117,21 +109,24 @@ async function showEmail() {
     linkBtn.style.borderRadius = ".2em";
     linkBtn.style.border = "1px solid white";
     linkBtn.addEventListener("click", checkLinkedIn);
-	linkBtn.addEventListener("mouseover", hoverin);
-	linkBtn.addEventListener("mouseout", hoverout);
-    function checkLinkedIn(){
-		window.open('https://www.linkedin.com/sales/gmail/profile/proxy/'+email);    
+    linkBtn.addEventListener("mouseover", hoverin);
+    linkBtn.addEventListener("mouseout", hoverout);
+
+    function checkLinkedIn() {
+      window.open('https://www.linkedin.com/sales/gmail/profile/proxy/' + email);
     }
-	function hoverin(){
-		this.style.transform = "scale(1.05, 1.05) translate(0%, -102%)";
-		this.style.background = '#2896a0';
-		this.style.transition = 'all 193ms';
-	}
-	function hoverout(){
-		this.style.transform = "scale(1, 1) translate(0%, -102%)";
-		this.style.background = '#0b868e';
-		this.style.transition = 'all 193ms';
-	}
+
+    function hoverin() {
+      this.style.transform = "scale(1.05, 1.05) translate(0%, -102%)";
+      this.style.background = '#2896a0';
+      this.style.transition = 'all 193ms';
+    }
+
+    function hoverout() {
+      this.style.transform = "scale(1, 1) translate(0%, -102%)";
+      this.style.background = '#0b868e';
+      this.style.transition = 'all 193ms';
+    }
   }
   var textbox_1 = document.createElement("textarea");
   textbox_1.setAttribute("id", "textbox_code");
@@ -144,13 +139,15 @@ async function showEmail() {
   textbox_1.style.color = "#2b3442";
   textbox_1.style.borderRadius = ".2em";
   textbox_1.value = email && /users.noreply.github.com/.test(email) === false ? email : 'no email found';
-if(email && /users.noreply.github.com/.test(email) === false){
-  textbox_1.select();
-  document.execCommand("copy");
-}
+  if (email && /users.noreply.github.com/.test(email) === false) {
+    textbox_1.select();
+    document.execCommand("copy");
+  }
+
   function close_s() {
     document.body.removeChild(document.getElementById("pop_container"));
   }
 
 }
+
 showEmail()
