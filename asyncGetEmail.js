@@ -16,8 +16,8 @@ async function getProfile(url) {
   var res = await fetch(url + '?tab=repositories', credentialObject);
   var text = await res.text();
   var doc = new DOMParser().parseFromString(text, 'text/html');
-  var pinnedRepos = doc.getElementsByClassName('col-12 d-flex width-full py-4 border-bottom public source');
-  var targetRepos = Array.from(pinnedRepos).map(itm => itm.getElementsByTagName('a')[0].href + '/commit/master.patch');
+  var repos = doc.getElementsByClassName('col-12 d-flex width-full py-4 border-bottom public source');
+  var targetRepos = Array.from(repos).map(itm => itm.getElementsByTagName('a')[0].href + '/commit/master.patch');
   return checkEmailPatch(targetRepos);
 }
 
@@ -32,12 +32,10 @@ async function checkEmailPatch(repos){
   for (i = 0; i < repos.length; i++) {
     var email = await getPatches(repos[i]);
     if (email != '') {
-	  console.log(email);
       return email;
     }
   }
 }
-
 function loadingElm() {
   var loaD = document.createElement("div");
   loaD.setAttribute("id", "loader-elm");
@@ -55,11 +53,13 @@ function killLoader() {
   document.body.removeChild(document.getElementById("loader-elm"));
 }
 
+var profile = /^.+?github\.c\om\/.+?(?=\/|\?|$)/.exec(window.location.href)[0];
+
 async function showEmail() {
-  var profile = /^.+?github\.com\/.+?(?=\/|\?|$)/.exec(window.location.href)[0];
   var email = await getProfile(profile);
-  killLoader();
   if (document.getElementById("pop_container")) close_s();
+
+  killLoader();
 
   var cDiv = document.createElement("div");
   cDiv.setAttribute("id", "pop_container");
@@ -115,19 +115,8 @@ async function showEmail() {
     function checkLinkedIn() {
       window.open('https://www.linkedin.com/sales/gmail/profile/proxy/' + email);
     }
-
-    function hoverin() {
-      this.style.transform = "scale(1.05, 1.05) translate(0%, -102%)";
-      this.style.background = '#2896a0';
-      this.style.transition = 'all 193ms';
-    }
-
-    function hoverout() {
-      this.style.transform = "scale(1, 1) translate(0%, -102%)";
-      this.style.background = '#0b868e';
-      this.style.transition = 'all 193ms';
-    }
   }
+
   var textbox_1 = document.createElement("textarea");
   textbox_1.setAttribute("id", "textbox_code");
   textbox_1.setAttribute("placeholder", "copy/paste skills list here");
@@ -138,16 +127,28 @@ async function showEmail() {
   textbox_1.style.border = "1px solid #293242";
   textbox_1.style.color = "#2b3442";
   textbox_1.style.borderRadius = ".2em";
-  textbox_1.value = email && /users.noreply.github.com/.test(email) === false ? email : 'no email found';
-  if (email && /users.noreply.github.com/.test(email) === false) {
+  textbox_1.value = email;
+
+  if (/@/.test(email) && /users.noreply.github.com/.test(email) === false) {
     textbox_1.select();
     document.execCommand("copy");
   }
 
-  function close_s() {
-    document.body.removeChild(document.getElementById("pop_container"));
-  }
-
+}
+function hoverin() {
+  this.style.transform = "scale(1.05, 1.05) translate(0%, -102%)";
+  this.style.background = '#2896a0';
+  this.style.transition = 'all 193ms';
 }
 
-showEmail()
+function hoverout() {
+  this.style.transform = "scale(1, 1) translate(0%, -102%)";
+  this.style.background = '#0b868e';
+  this.style.transition = 'all 193ms';
+}
+
+function close_s() {
+  document.body.removeChild(document.getElementById("pop_container"));
+}
+
+showEmail();
