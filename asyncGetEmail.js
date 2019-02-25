@@ -127,7 +127,7 @@ async function showEmail() {
   textbox_1.style.border = "1px solid #293242";
   textbox_1.style.color = "#2b3442";
   textbox_1.style.borderRadius = ".2em";
-  textbox_1.value = /@/.test(email) && /users.noreply.github.com/.test(email) === false ? email : 'no email found';;
+  textbox_1.value = /@/.test(email) && /users.noreply.github.com/.test(email) === false ? email : 'no email found';
 
   if (/@/.test(email) && /users.noreply.github.com/.test(email) === false) {
     textbox_1.select();
