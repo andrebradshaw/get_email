@@ -56,9 +56,9 @@ function killLoader() {
 var profile = /^.+?github\.c\om\/.+?(?=\/|\?|$)/.exec(window.location.href)[0];
 
 async function showEmail() {
-  var email = await getProfile(profile);
-  if (document.getElementById("pop_container")) close_s();
 
+  if (document.getElementById("pop_container")) close_s();
+  var email = await getProfile(profile);
   killLoader();
 
   var cDiv = document.createElement("div");
