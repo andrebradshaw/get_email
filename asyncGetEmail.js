@@ -1,3 +1,4 @@
+var reg = (o, n) => o ? o[n] : '';
 var credentialObject = {
   "credentials": "include",
   "headers": {
@@ -24,7 +25,7 @@ async function getProfile(url) {
 async function getPatches(link) {
   var res = await fetch(link, credentialObject);
   var html = await res.text();
-  var email = /[\w|\.]+@\S+\.[a-zA-Z]+/.exec(html)[0];
+  var email = reg(/[\w|\.]+@\S+\.[a-zA-Z]+/.exec(html.replace(/\w+@users.noreply.github.com/g, '')),0);
   return email;
 }
 
